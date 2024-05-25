@@ -3,6 +3,7 @@ import { Schema } from "mongoose";
 
 const paySchema = new Schema(
   {
+    app_id: { type: Schema.Types.ObjectId, ref: "App", required: true }, // 应用ID，引用App模型
     user_id: { type: Schema.Types.ObjectId, ref: "User", required: true }, // 用户ID，引用User模型
     payment_id: { type: Schema.Types.ObjectId, ref: "Payment", required: true }, // 支付ID，引用Payment模型
     name: { type: String, required: true }, // 支付名称

@@ -11,9 +11,10 @@ const appSchema = new Schema(
     reg_type: { type: Number, required: true, default: 3 }, // 注册方式 1: 手机号 2: 邮箱 3: 用户名
     reg_machine: { type: Boolean, required: true, default: false }, // 注册设备限制开关
     reg_machine_num: { type: Number, required: true, default: 1, min: 1 }, // 注册设备限制次数
-    reg_ip_time: { type: Boolean, required: true, default: false }, // 注册IP限制开关
-    reg_awd: { type: Number, required: true, default: 1 }, // 注册奖励类型
-    reg_awd_val: { type: Number, required: true, default: 0, min: 0 }, // 注册奖励数值
+    reg_ip: { type: Boolean, required: true, default: false }, // 注册IP限制开关
+    reg_ip_num: { type: Boolean, required: true, default: false }, // 注册IP限制次数
+    reg_awd: { type: Number, required: true, default: 1 }, // 注册奖励类型 1: 积分 2: VIP
+    reg_awd_val: { type: Number, required: true, default: 0, min: 0 }, // 注册奖励数值  积分/秒
     login_state: { type: Boolean, required: true, default: false }, // 登录开关
     login_machine: { type: Boolean, required: true, default: false }, // 登录设备限制开关
     login_machine_awd: { type: Number, required: true, default: 1 }, // 更换设备奖励类型
