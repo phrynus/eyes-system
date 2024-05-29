@@ -1,6 +1,8 @@
-import db from "~/config/db";
-import { KoaApp } from "~/routes";
+import KoaApp from "~/routes";
+import models from "~/models";
+import config from "~/config";
 
-await KoaApp.listen(3000, () => {
-  console.log("Server is running at http://localhost:3000");
+KoaApp.listen(process.env.PORT, () => {
+  models.LogFun.info("服务器启动成功 http://localhost:3000");
+  models.LogFun.info(config, "config", false);
 });
