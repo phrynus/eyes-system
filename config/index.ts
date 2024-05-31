@@ -7,6 +7,7 @@ import QRCode from "qrcode";
 const configPath = path.join(__dirname, "config.json");
 const configFile = await Bun.file(configPath, { type: "application/json" }).text();
 const config = JSON.parse(configFile || "{}");
+config.name = process.env.NAME || "SYSTEM";
 // 初始化 config 配置
 config.JWT = {
   // 随机字符串
@@ -16,7 +17,7 @@ config.JWT = {
   // 续约过期时间
   REFRESH_EXPIRES_IN: "7d",
   // 是否允许续约
-  RESAVE: process.env.JWT_RESAVE === "true",
+  RESAVE: process.env.JWT_RESAVE === "true"
 };
 if (!config.speakeasy?.ascii) {
   config.speakeasy = speakeasy.generateSecret();
@@ -27,6 +28,8 @@ if (!config.speakeasy?.ascii) {
   });
   config.speakeasy.qr_code = await QRCode.toDataURL(config.speakeasy.otpauth_url);
 }
+config.go = () => {
+  Bun.write(configPath, JSON.stringify(config));
+};
+config.go();
 export default config;
-// 写入 config.json
-Bun.write(configPath, JSON.stringify(config));
