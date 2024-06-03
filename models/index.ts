@@ -1,7 +1,6 @@
 // 数据库模型 集合
 const models = {
   App: await import("./app").then((m) => m.default),
-  AppVer: await import("./app_ver").then((m) => m.default),
   User: await import("./user").then((m) => m.default),
   Pay: await import("./pay").then((m) => m.default),
   Goods: await import("./goods").then((m) => m.default),

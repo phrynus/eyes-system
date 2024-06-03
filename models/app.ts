@@ -6,7 +6,13 @@ const appSchema = new Schema(
     app_name: { type: String, required: true }, // 应用名称
     app_state: { type: Boolean, required: true, default: false }, // 应用开关
     app_desc: { type: String, required: true, default: "我是描述描述述述述述述述" }, // 应用描述
-    app_icon: { type: String, required: true }, // 应用图标
+    app_icon: {
+      type: String,
+      required: true,
+      default: "https://static-production.npmjs.com/c426a1116301d1fd178c51522484127a.png"
+    }, // 应用图标
+    app_ver: { type: String, required: true, default: "1.0.0", match: /[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,6}/ }, // 版本号
+
     reg_state: { type: Boolean, required: true, default: false }, // 注册开关
     reg_type: { type: Number, required: true, default: 3 }, // 注册方式 1: 手机号 2: 邮箱 3: 用户名
     reg_machine: { type: Boolean, required: true, default: false }, // 注册设备限制开关
@@ -22,30 +28,38 @@ const appSchema = new Schema(
     login_mc: { type: Boolean, required: true, default: false }, // 登录限制开关
     login_mc_rule: { type: Number, required: true, default: 1 }, // 登录限制规则
     smtp_state: { type: Boolean, required: true, default: false }, // 邮箱开关
-    smtp_port: { type: Number }, // 邮箱端口
-    smtp_user: { type: String }, // 邮箱用户名
-    smtp_pass: { type: String }, // 邮箱密码
-    smtp_host: { type: String }, // 邮箱地址
+    smtp_port: { type: Number, default: 80 }, // 邮箱端口
+    smtp_user: { type: String, default: "" }, // 邮箱用户名
+    smtp_pass: { type: String, default: "" }, // 邮箱密码
+    smtp_host: { type: String, default: "" }, // 邮箱地址
     sms_state: { type: Boolean, required: true, default: false }, // 短信开关
-    sms_url: { type: String }, // 短信接口地址
-    sms_key: { type: String }, // 短信接口key
-    sms_tpl: { type: String }, // 短信模板
-    pay_state: { type: Boolean, required: true, default: false }, // 支付开关
-    pay_type: { type: String, required: true, default: "alipay", enum: ["alipay", "wechat", "usdt"] }, // 支付方式 支付宝、微信、USDT
-    pay_config: {
+    sms_url: { type: String, default: "" }, // 短信接口地址
+    sms_key: { type: String, default: "" }, // 短信接口key
+    sms_tpl: { type: String, default: "" }, // 短信模板
+    pay_alipay_state: { type: Boolean, required: true, default: false }, // 支付开关
+    pay_alipay_config: {
       type: Object,
       default: {
-        alipay: {
-          state: false
-        },
-        wechat: {
-          state: false
-        },
-        usdt: {
-          state: false
-        }
+        url: ""
       }
-    } // 支付配置
+    }, // 支付配置
+    pay_wechat_state: { type: Boolean, required: true, default: false }, // 支付开关
+    pay_wechat_config: {
+      type: Object,
+      default: { url: "" }
+    }, // 支付配置
+    pay_usdt_state: { type: Boolean, required: true, default: false }, // 支付开关
+    pay_usdt_config: {
+      type: Object,
+      default: { url: "" }
+    }, // 支付配置
+    ver_url: { type: String, default: "" }, // 版本下载地址
+    ver_desc: { type: String, default: "" }, // 版本描述
+    mi_sign: { type: Boolean, required: true, default: false }, // 是否签名
+    mi_key: {
+      type: Object,
+      required: true
+    } // 签名key
   },
   {
     timestamps: {

@@ -7,10 +7,10 @@ import koaBody from "koa-body";
 import koaStatic from "koa-static";
 import KoaCors from "@koa/cors";
 import path from "path";
-import middlewares from "~/middlewares";
+
 // 路由
 import routesUser from "./user";
-import routesApi from "./api";
+import routesApi from "./fapi";
 
 // app
 const KoaApp = new Koa();
@@ -18,12 +18,19 @@ const router = new KoaRouter();
 // middleware
 KoaApp.use(KoaLogger());
 KoaApp.use(koaHelmet());
-KoaApp.use(koaBody());
-KoaApp.use(KoaCors());
-// 设置返回数据格式
-KoaApp.use(middlewares.jsonTemplate);
+KoaApp.use(
+  koaBody({
+    multipart: true
+  })
+);
+KoaApp.use(
+  KoaCors({
+    credentials: true
+  })
+);
+
 // router
-router.use("/api", routesApi.routes(), routesApi.allowedMethods());
+router.use("/fapi", routesApi.routes(), routesApi.allowedMethods());
 router.use("/user", routesUser.routes(), routesUser.allowedMethods());
 // response
 KoaApp.use(router.routes()).use(router.allowedMethods());

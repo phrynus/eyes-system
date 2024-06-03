@@ -9,16 +9,20 @@ const configFile = await Bun.file(configPath, { type: "application/json" }).text
 const config = JSON.parse(configFile || "{}");
 config.name = process.env.NAME || "SYSTEM";
 // 初始化 config 配置
-config.JWT = {
-  // 随机字符串
-  SECRET: crypto.randomBytes(32).toString("base64"),
-  // 基础过期时间
-  EXPIRES_IN: "1d",
-  // 续约过期时间
-  REFRESH_EXPIRES_IN: "7d",
-  // 是否允许续约
-  RESAVE: process.env.JWT_RESAVE === "true"
-};
+if (!config.JWT?.PUBLIC) {
+  config.JWT = {
+    // 随机字符串
+    PUBLIC: crypto.randomBytes(32).toString("base64"),
+    PRIVATE: crypto.randomBytes(32).toString("base64"),
+    // 基础过期时间
+    EXPIRES_IN: "1d",
+    // 续约过期时间
+    RENEW_EXPIRES_IN: "7d",
+    // 是否允许续约
+    RESAVE: process.env.JWT_RESAVE === "true"
+  };
+}
+
 if (!config.speakeasy?.ascii) {
   config.speakeasy = speakeasy.generateSecret();
   config.speakeasy.use = false;
