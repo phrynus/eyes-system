@@ -17,9 +17,7 @@ if (!config.JWT?.PUBLIC) {
     // 基础过期时间
     EXPIRES_IN: "1d",
     // 续约过期时间
-    RENEW_EXPIRES_IN: "7d",
-    // 是否允许续约
-    RESAVE: process.env.JWT_RESAVE === "true"
+    RENEW_EXPIRES_IN: "7d"
   };
 }
 
