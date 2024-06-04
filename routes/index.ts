@@ -10,7 +10,8 @@ import path from "path";
 
 // 路由
 import routesUser from "./user";
-import routesApi from "./fapi";
+import routesFapi from "./fapi";
+import routesApi from "./api";
 
 // app
 const KoaApp = new Koa();
@@ -30,7 +31,8 @@ KoaApp.use(
 );
 
 // router
-router.use("/fapi", routesApi.routes(), routesApi.allowedMethods());
+router.use("/fapi", routesFapi.routes(), routesFapi.allowedMethods());
+router.use("/api", routesApi.routes(), routesApi.allowedMethods());
 router.use("/user", routesUser.routes(), routesUser.allowedMethods());
 // response
 KoaApp.use(router.routes()).use(router.allowedMethods());

@@ -1,6 +1,5 @@
 import KoaRouter from "koa-router";
-import config from "~/config";
-import jwt from "jsonwebtoken";
+
 import middlewares from "~/middlewares";
 import models from "~/models";
 import { generateKeyPairSync } from "crypto";
@@ -11,23 +10,7 @@ const router = new KoaRouter();
 
 router.use(middlewares.jsonTemplate);
 // 设置jwt验证
-router.use(async (ctx, next) => {
-  const token = ctx.headers["authorization"];
-  if (!token) {
-    ctx.status = 403;
-    ctx.body = new Error("token not found");
-    return;
-  }
-  try {
-    const decoded = jwt.verify(token, config.JWT.PUBLIC);
-    ctx.state.user = decoded;
-    await next();
-  } catch (err: any) {
-    ctx.status = 401;
-    ctx.body = new Error(err);
-    return;
-  }
-});
+router.use(middlewares.jwtVerification);
 
 // Register
 router.use("/app", RApp.routes(), RApp.allowedMethods());
