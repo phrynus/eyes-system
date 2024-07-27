@@ -1,36 +1,24 @@
-import db from "~/config/db";
+import { db } from "~/config";
 import { Schema } from "mongoose";
-
-const userSchema = new Schema(
+import { nanoid } from "nanoid";
+const schema = new Schema(
   {
-    app_id: { type: Schema.Types.ObjectId, ref: "App", required: true }, // 应用ID，引用App模型
-    username: { type: String, required: true, unique: true, match: /^[\w-]{4,16}$/ }, // 用户名
-    password: { type: String, required: true, minlength: 8 }, // 用户密码
-    icon: {
-      type: String,
-      match: /^(((ht|f)tps?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/
-    }, // 用户头像
-    integral: { type: Number, default: 0, min: 0 }, // 用户积分
-    status: { type: Number, required: true, default: 1 }, // 用户状态 1:正常 2:禁用
-    vip_type: { type: Number, default: 1 }, // VIP类型
-    vip_expire_time: { type: Date, default: Date.now }, // VIP到期时间
-    email: {
-      type: String,
-      match:
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    }, // 用户邮箱
-    mobile: {
-      type: String,
-      match:
-        /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1589]))\d{8}$/
-    }, // 用户手机号
-    signature: { type: String }, // 用户签名
-    machine_code: { type: String }, // 机器码
-    last_login: { type: Date, default: Date.now }, // 最后登录时间
-    extra: {
-      type: Object,
-      default: {}
-    } // 其他额外信息
+    pid: { type: String, required: true, ref: "app" },
+    uid: { type: String, required: true, default: () => nanoid(), unique: true }, // 身份ID
+    name: { type: String, required: true, unique: true }, // 用户名
+    password: { type: String, required: true }, // 密码
+    avatar: { type: String, default: "/images/avatar.png" }, // 头像
+    phone: { type: String, unique: true },
+    email: { type: String, unique: true },
+    qq: { type: String, unique: true },
+    fen: { type: Number, default: 0 }, // 余额积分
+    vip: { type: Date, default: () => new Date(new Date().getTime() - 24 * 60 * 60 * 1000) }, // vip日期
+    reg_ip: { type: String, default: "127.0.0.1" }, // 注册IP
+    reg_time: { type: Date, default: () => new Date() }, // 注册时间
+    remark: { type: String, default: "" }, // 备注
+    status: { type: Number, default: 1 }, // 状态
+    sn_max: { type: Number, default: 1 }, // 最大绑定
+    sn_list: { type: Array, default: [] } // 绑定对象列表
   },
   {
     timestamps: {
@@ -40,4 +28,4 @@ const userSchema = new Schema(
   }
 );
 
-export default db.model("User", userSchema);
+export default db.model("user", schema);

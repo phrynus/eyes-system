@@ -1,37 +1,30 @@
 {
   "name": "eyes-system",
-  "module": "main.ts",
+  "module": "system",
   "type": "module",
   "scripts": {
-    "start": "bun --watch run main.ts",
-    "build": "bun build main.ts"
+    "start": "bun run system.ts",
+    "dev": "bun --watch run system.ts"
+  },
+  "dependencies": {
+    "@koa/cors": "^5.0.0",
+    "@koa/router": "^12.0.1",
+    "bun": "latest",
+    "crypto": "^1.0.1",
+    "koa": "^2.15.3",
+    "mongoose": "^8.5.1",
+    "nanoid": "^5.0.7",
+    "qrcode": "^1.5.3",
+    "speakeasy": "^2.0.0"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/jsonwebtoken": "^9.0.6",
-    "@types/koa": "^2.15.0",
     "@types/koa__cors": "^5.0.0",
-    "@types/koa-logger": "^3.1.5",
-    "@types/koa-router": "^7.4.8",
-    "@types/koa-static": "^4.0.4",
+    "@types/koa__router": "^12.0.4",
     "@types/qrcode": "^1.5.5",
     "@types/speakeasy": "^2.0.10"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
-  },
-  "dependencies": {
-    "@koa/cors": "^5.0.0",
-    "crypto": "^1.0.1",
-    "jsonwebtoken": "^9.0.2",
-    "koa": "^2.15.3",
-    "koa-body": "^6.0.1",
-    "koa-helmet": "^7.0.2",
-    "koa-logger": "^3.2.1",
-    "koa-router": "^12.0.1",
-    "koa-static": "^5.0.0",
-    "mongoose": "^8.4.0",
-    "qrcode": "^1.5.3",
-    "speakeasy": "^2.0.0"
   }
 }

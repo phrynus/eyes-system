@@ -1,41 +1,12 @@
-// 路由
-import Koa from "koa";
-import KoaRouter from "koa-router";
-import KoaLogger from "koa-logger";
-import koaHelmet from "koa-helmet";
-import koaBody from "koa-body";
-import koaStatic from "koa-static";
-import KoaCors from "@koa/cors";
-import path from "path";
+import koa from "koa";
+import Router from "@koa/router";
+import Cors from "@koa/cors";
 
-// 路由
-import routesUser from "./user";
-import routesFapi from "./fapi";
-import routesApi from "./api";
+const app = new koa();
+const router = new Router();
+const cors = Cors();
 
-// app
-const KoaApp = new Koa();
-const router = new KoaRouter();
-// middleware
-KoaApp.use(KoaLogger());
-KoaApp.use(koaHelmet());
-KoaApp.use(
-  koaBody({
-    multipart: true
-  })
-);
-KoaApp.use(
-  KoaCors({
-    credentials: true
-  })
-);
+router.use(cors);
+app.use(router.routes()).use(router.allowedMethods());
 
-// router
-router.use("/fapi", routesFapi.routes(), routesFapi.allowedMethods());
-router.use("/api", routesApi.routes(), routesApi.allowedMethods());
-router.use("/user", routesUser.routes(), routesUser.allowedMethods());
-// response
-KoaApp.use(router.routes()).use(router.allowedMethods());
-KoaApp.use(koaStatic(path.join(__dirname, "../web/dist")));
-// export
-export default KoaApp;
+export default app;

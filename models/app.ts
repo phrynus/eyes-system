@@ -1,65 +1,28 @@
-import db from "~/config/db";
+import { db } from "~/config";
 import { Schema } from "mongoose";
-
-const appSchema = new Schema(
+import { nanoid } from "nanoid";
+const schema = new Schema(
   {
-    app_name: { type: String, required: true }, // 应用名称
-    app_state: { type: Boolean, required: true, default: false }, // 应用开关
-    app_desc: { type: String, required: true, default: "我是描述描述述述述述述述" }, // 应用描述
-    app_icon: {
+    pid: { type: String, required: true, default: () => nanoid(), unique: true }, // 应用ID
+    name: { type: String, required: true }, // 应用名称
+    state: { type: Number, required: true, default: 0, enum: [0, 1] }, // 1: 启用, 0: 禁用
+    icon: {
       type: String,
       required: true,
       default: "https://static-production.npmjs.com/c426a1116301d1fd178c51522484127a.png"
     }, // 应用图标
-    app_ver: { type: String, required: true, default: "1.0.0", match: /[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,6}/ }, // 版本号
-
-    reg_state: { type: Boolean, required: true, default: false }, // 注册开关
-    reg_type: { type: Number, required: true, default: 3 }, // 注册方式 1: 手机号 2: 邮箱 3: 用户名
-    reg_machine: { type: Boolean, required: true, default: false }, // 注册设备限制开关
-    reg_machine_num: { type: Number, required: true, default: 1, min: 1 }, // 注册设备限制次数
-    reg_ip: { type: Boolean, required: true, default: false }, // 注册IP限制开关
-    reg_ip_num: { type: Boolean, required: true, default: false }, // 注册IP限制次数
-    reg_awd: { type: Number, required: true, default: 1 }, // 注册奖励类型 1: 积分 2: VIP
-    reg_awd_val: { type: Number, required: true, default: 0, min: 0 }, // 注册奖励数值  积分/秒
-    login_state: { type: Boolean, required: true, default: false }, // 登录开关
-    login_machine: { type: Boolean, required: true, default: false }, // 登录设备限制开关
-    login_machine_awd: { type: Number, required: true, default: 1 }, // 更换设备奖励类型
-    login_machine_val: { type: Number, required: true, default: 0, min: 0 }, // 更换设备奖励数值
-    login_mc: { type: Boolean, required: true, default: false }, // 登录限制开关
-    login_mc_rule: { type: Number, required: true, default: 1 }, // 登录限制规则
-    smtp_state: { type: Boolean, required: true, default: false }, // 邮箱开关
-    smtp_port: { type: Number, default: 80 }, // 邮箱端口
-    smtp_user: { type: String, default: "" }, // 邮箱用户名
-    smtp_pass: { type: String, default: "" }, // 邮箱密码
-    smtp_host: { type: String, default: "" }, // 邮箱地址
-    sms_state: { type: Boolean, required: true, default: false }, // 短信开关
-    sms_url: { type: String, default: "" }, // 短信接口地址
-    sms_key: { type: String, default: "" }, // 短信接口key
-    sms_tpl: { type: String, default: "" }, // 短信模板
-    pay_alipay_state: { type: Boolean, required: true, default: false }, // 支付开关
-    pay_alipay_config: {
-      type: Object,
-      default: {
-        url: ""
-      }
-    }, // 支付配置
-    pay_wechat_state: { type: Boolean, required: true, default: false }, // 支付开关
-    pay_wechat_config: {
-      type: Object,
-      default: { url: "" }
-    }, // 支付配置
-    pay_usdt_state: { type: Boolean, required: true, default: false }, // 支付开关
-    pay_usdt_config: {
-      type: Object,
-      default: { url: "" }
-    }, // 支付配置
-    ver_url: { type: String, default: "" }, // 版本下载地址
-    ver_desc: { type: String, default: "" }, // 版本描述
-    mi_sign: { type: Boolean, required: true, default: false }, // 是否签名
-    mi_key: {
-      type: Object,
-      required: true
-    } // 签名key
+    operate: {
+      type: Number,
+      required: true,
+      default: 0,
+      enum: [0, 1] // 0: 免费, 1: VIP
+    }, // 运营模式
+    description: {
+      type: String,
+      required: true,
+      default: ""
+    }, // 应用描述
+    extend: { type: Object, required: true, default: {} } // 扩展字段
   },
   {
     timestamps: {
@@ -69,4 +32,4 @@ const appSchema = new Schema(
   }
 );
 
-export default db.model("App", appSchema);
+export default db.model("app", schema);

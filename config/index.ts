@@ -1,37 +1,34 @@
-// 读取config.json
+import mongoose from "mongoose";
 import path from "path";
 import crypto from "crypto";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
-//
-const configPath = path.join(__dirname, "config.json");
-const configFile = await Bun.file(configPath, { type: "application/json" }).text();
-const config = JSON.parse(configFile || "{}");
-config.name = process.env.NAME || "SYSTEM";
-// 初始化 config 配置
-if (!config.JWT?.PUBLIC) {
-  config.JWT = {
-    // 随机字符串
-    PUBLIC: crypto.randomBytes(32).toString("base64"),
-    PRIVATE: crypto.randomBytes(32).toString("base64"),
-    // 基础过期时间
-    EXPIRES_IN: "1d",
-    // 续约过期时间
-    RENEW_EXPIRES_IN: "7d"
-  };
-}
 
-if (!config.speakeasy?.ascii) {
-  config.speakeasy = speakeasy.generateSecret();
-  config.speakeasy.use = false;
-  config.speakeasy.otpauth_url = speakeasy.otpauthURL({
-    secret: config.speakeasy.ascii,
-    label: "DEEP"
-  });
-  config.speakeasy.qr_code = await QRCode.toDataURL(config.speakeasy.otpauth_url);
-}
-config.go = () => {
-  Bun.write(configPath, JSON.stringify(config));
+const cPath = path.join(__dirname, "config.json");
+// 如果没有就新建一个
+if (!(await Bun.file(cPath).exists())) await Bun.write(cPath, "{}");
+const cFile = await Bun.file(cPath, { type: "application/json" }).text();
+const c = JSON.parse(cFile || "{}");
+
+// mongoose
+if (!process.env.MONGODB_URI) throw Error("MONGODB_URI is already set!");
+await mongoose.connect(process.env.MONGODB_URI || "").then(() => console.log("Connected to MongoDB!"));
+export const db = mongoose.connection;
+// mongoose
+// jwt
+export const jwt = {
+  rublicKey: crypto.randomBytes(32).toString("hex"),
+  secretKey: c.jwt ? c.jwt.secretKey : crypto.randomBytes(32).toString("hex"),
+  expiresIn: "1d",
+  refreshTokenExpiresIn: "7d"
 };
-config.go();
-export default config;
+// jwt
+// speakeasy
+export const sk: any = {
+  use: c.sk ? c.sk.use : false,
+  secret: c.sk ? c.sk.secret : speakeasy.generateSecret({ length: 20 })
+};
+sk.qrCode = c.sk ? c.sk.qrCode : await QRCode.toDataURL(sk.secret.otpauth_url);
+// speakeasy
+await Bun.write(cPath, JSON.stringify({ jwt, sk }, null, 2));
+export const config = { db, jwt, sk };

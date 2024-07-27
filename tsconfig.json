@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
+    // Enable latest features
+    "baseUrl": "./",                                  
+    /* Specify the base directory to resolve non-relative module names. */
     "paths": {
       "~/*": ["./*"]
     },
-    // Enable latest features
     "lib": ["ESNext", "DOM"],
     "target": "ESNext",
     "module": "ESNext",
