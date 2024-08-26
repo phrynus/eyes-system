@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import path from "path";
-import crypto from "crypto";
+import ioredis from "ioredis";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
 
@@ -12,17 +12,19 @@ const c = JSON.parse(cFile || "{}");
 
 // mongoose
 if (!process.env.MONGODB_URI) throw Error("MONGODB_URI is already set!");
-await mongoose.connect(process.env.MONGODB_URI || "").then(() => console.log("Connected to MongoDB!"));
-export const db = mongoose.connection;
+await mongoose.connect(process.env.MONGODB_URI).then(() => console.log("已连接 MongoDB"));
+export const MongoDB = mongoose.connection;
 // mongoose
-// jwt
-export const jwt = {
-  rublicKey: crypto.randomBytes(32).toString("hex"),
-  secretKey: c.jwt ? c.jwt.secretKey : crypto.randomBytes(32).toString("hex"),
-  expiresIn: "1d",
-  refreshTokenExpiresIn: "7d"
-};
-// jwt
+
+// Redis
+if (!process.env.REDIS_HOST) throw Error("REDIS_HOST is already set!");
+if (!process.env.REDIS_PORT) throw Error("REDIS_PORT is already set!");
+if (!process.env.REDIS_PASSWORD) throw Error("REDIS_PASSWORD is already set!");
+export const Redis = new ioredis(parseInt(process.env.REDIS_PORT), process.env.REDIS_HOST, {
+  password: process.env.REDIS_PASSWORD
+}).on("connect", () => console.log("已连接 Redis"));
+// Redis
+
 // speakeasy
 export const sk: any = {
   use: c.sk ? c.sk.use : false,
@@ -30,5 +32,5 @@ export const sk: any = {
 };
 sk.qrCode = c.sk ? c.sk.qrCode : await QRCode.toDataURL(sk.secret.otpauth_url);
 // speakeasy
-await Bun.write(cPath, JSON.stringify({ jwt, sk }, null, 2));
-export const config = { db, jwt, sk };
+await Bun.write(cPath, JSON.stringify({ sk }, null, 2));
+export const config = { MongoDB, Redis, sk };

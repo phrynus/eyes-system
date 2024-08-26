@@ -4,10 +4,10 @@ import { nanoid } from "nanoid";
 const schema = new Schema(
   {
     pid: { type: String, required: true, ref: "app" },
-    uid: { type: String, required: true, default: () => nanoid(), unique: true }, // 身份ID
-    name: { type: String, required: true, unique: true }, // 用户名
-    password: { type: String, required: true }, // 密码
-    extend: { type: Object, required: true, default: {} } // 扩展字段
+    uid: { type: String, required: true, ref: "user" }, // 身份ID
+    title: { type: String, required: true }, // 标题
+    extend: { type: Object, required: true, default: {} }, // 扩展字段
+    content: { type: String, required: true } // 内容
   },
   {
     timestamps: {
@@ -17,4 +17,4 @@ const schema = new Schema(
   }
 );
 
-export default MongoDB.model("user", schema);
+export default MongoDB.model("userContent", schema);

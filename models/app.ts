@@ -1,4 +1,4 @@
-import { db } from "~/config";
+import { MongoDB } from "~/config";
 import { Schema } from "mongoose";
 import { nanoid } from "nanoid";
 const schema = new Schema(
@@ -11,17 +11,6 @@ const schema = new Schema(
       required: true,
       default: "https://static-production.npmjs.com/c426a1116301d1fd178c51522484127a.png"
     }, // 应用图标
-    operate: {
-      type: Number,
-      required: true,
-      default: 0,
-      enum: [0, 1] // 0: 免费, 1: VIP
-    }, // 运营模式
-    description: {
-      type: String,
-      required: true,
-      default: ""
-    }, // 应用描述
     extend: { type: Object, required: true, default: {} } // 扩展字段
   },
   {
@@ -32,4 +21,4 @@ const schema = new Schema(
   }
 );
 
-export default db.model("app", schema);
+export default await MongoDB.model("app", schema);
